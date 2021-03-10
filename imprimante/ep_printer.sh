@@ -68,6 +68,10 @@ fi
 
 lpadmin -p EPSON -v socket://192.168.0.114:9100 -D "Epson ET-3750 Series" -L "Epson" -o printer-error-policy="retry-job" -u allow:all -m lsb/usr/epson-inkjet-printer-escpr2/Epson/Epson-ET-3750_Series-epson-inkjet-printer-escpr2.ppd.gz
 
+cupsenable EPSON
+
+sudo sed -i 's/No/Yes/g' /etc/cups/printers.conf
+
 service cups restart
 
 
