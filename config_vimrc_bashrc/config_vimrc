@@ -81,12 +81,11 @@ autocmd BufNewFile *.sh,*.bash call Bash()
 autocmd BufNewFile *.sh,*.bash exe "1," . 14 . "g/Nom:/s//Nom: " .expand("%")
 "Ajout de la date de création
 autocmd bufnewfile *.sh,*.bash exe "1," . 14 . "g/Date:/s//Date: " .strftime("%c")
-
 autocmd bufnewfile *.sh,*.bash exe "1," . 14 . "g#Usage:#s##Usage: ./" .expand("%")
 "Écriture des données en buffer sur le fichier
 autocmd Bufwritepre,filewritepre *.sh,*.bash exe "normal ma"
 "Ajout du droit d’exécution
-autocmd BufWritePost *.sh silent execute "! sudo chmod u+x %"
+autocmd BufWritePost *.sh,*.bash silent execute "! sudo chmod u+x %"
 
 "Raccourci faisant appel à la fonction Bash
 nnoremap <F2> :call Bash()<CR>
