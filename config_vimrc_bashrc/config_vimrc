@@ -88,12 +88,12 @@ endfunction
 "Appel de la fonction
 autocmd BufNewFile *.sh,*.bash call Bash()
 "Ajout du nom du script
-autocmd BufNewFile *.sh,*.bash exe "1," . 16 . "g/Script_Name:/s//Script_Name: " .expand("%")
+autocmd BufNewFile *.sh,*.bash exe "1," . 17 . "g/Script_Name:/s//Script_Name: " .expand("%")
 "Ajout de la date de création
-autocmd bufnewfile *.sh,*.bash exe "1," . 16 . "g/Date:/s//Date: " .strftime("%c")
+autocmd bufnewfile *.sh,*.bash exe "1," . 17 . "g/Date:/s//Date: " .strftime("%c")
 "Ajout de la version de Bash
-autocmd bufnewfile *.sh,*.bash exe "1," . 16 . "g/Bash_Version:/s//Bash_Version: " .system('echo $BASH_VERSION')
-autocmd bufnewfile *.sh,*.bash exe "1," . 16 . "g#Usage:#s##Usage: ./" .expand("%")
+autocmd bufnewfile *.sh,*.bash exe "1," . 17 . "g/Bash_Version:/s//Bash_Version: " .system('echo $BASH_VERSION')
+autocmd bufnewfile *.sh,*.bash exe "1," . 17 . "g#Usage:#s##Usage: ./" .expand("%")
 "Écriture des données en buffer sur le fichier
 autocmd Bufwritepre,filewritepre *.sh,*.bash exe "normal ma"
 "Ajout du droit d’exécution
