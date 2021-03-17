@@ -36,6 +36,7 @@ set smartindent            "Améliore l'auto-indentation
 set showmatch              "Détection des parenthèses ouvrantes et fermantes
 set wildmenu               
 set wildmode=longest:full,full "Simplifie la complétion des commandes vim
+set background=dark "utilise des couleurs adaptées à un arrière-plan sombre.
 
 "Abréviations
 ab apt apt-get
@@ -100,10 +101,25 @@ autocmd Bufwritepre,filewritepre *.sh,*.bash exe "normal ma"
 autocmd BufWritePost *.sh,*.bash silent execute "! sudo chmod u+x %"
 
 "Raccourci faisant appel à la fonction Bash
-nnoremap <F2> :call Bash()<CR>
+nnoremap <F5> :call Bash()<CR>
 
 "Raccourci permettant de récupérer le résultat de l'exécution d'une commande directement sur vim  
-nnoremap <F6> !!$SHELL<Enter>
+nnoremap <F3> !!$SHELL<Enter><CR>
+
+"Fonction Permettant de basculer entre nu et rnu avec la touche <F2>
+function NumToggle()
+  if &nu == 1
+    set nonumber
+    set relativenumber
+  elseif &rnu == 1
+    set norelativenumber
+    set number
+  else
+     set nu
+  endif
+endfunction
+
+nnoremap <F2> :call NumToggle()<CR>
 
 " Fichiers Markdown
 " =============================
