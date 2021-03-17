@@ -17,7 +17,7 @@ endif
 
 " Uncomment the following to have Vim jump to the last position when
 " reopening a file
-au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
+autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
 
 set incsearch		" Incremental search
 set hidden		" Hide buffers when they are abandoned
@@ -51,37 +51,49 @@ function Bash()
   0put =\"\#!/bin/bash\"|$
   1put =\"\#-*- coding: UTF8 -*-\"|$
   2put =\"\"|$
-  3put =\"\#************************************************#\"|$
-  4put =\"\# Nom:                                           \"|$
-  5put =\"\# Auteur:  Daniel dossantosjdf@gmail.com         #\"|$
-  6put =\"\# Date:                                          \"|$
-  7put =\"\# Version: 1.0                                   #\"|$
-  8put =\"\#                                                \"|$
-  9put =\"\# Rôle:     Que fait le script?                  #\"|$
-  10put =\"\# Usage:                                         \"|$
-  11put =\"\# Limites:  limites d'utilisation                #\"|$
-  12put =\"\# Contraintes:                                   \"|$
-  13put =\"\# Licence:                                       #\"|$
-  14put =\"\#************************************************#\"|$
-  15put =\"\"|$
-  16put =\"\### Includes ###\"|$
-  17put =\"\"|$
-  18put =\"\### Fonctions ###\"|$
-  19put =\"\"|$
-  20put =\"\### Variables ###\"|$
-  21put =\"\"|$
-  22put =\"\### Main ###\"|$
-  23put =\"\"|$
-  24put =\"\### Clean ###\"|$
+  3put =\"\#--------------------------------------------------#\"|$
+  4put =\"\# Script_Name:	                               \"|$    
+  5put =\"\#                                                   \"|$  
+  6put =\"\# Author:  'dossantosjdf@gmail.com'                 \"|$
+  7put =\"\# Date:                                             \"|$
+  8put =\"\# Version: 1.0                                      \"|$
+  9put =\"\# Bash_Version:                                     \"|$     
+ 10put =\"\#--------------------------------------------------#\"|$
+ 11put =\"\# Description:                                      \"|$
+ 12put =\"\#                                                   \"|$
+ 13put =\"\#                                                   \"|$
+ 14put =\"\# Options:                                          \"|$
+ 15put =\"\#                                                   \"|$
+ 16put =\"\# Usage:                                            \"|$
+ 17put =\"\#                                                   \"|$
+ 18put =\"\# Limits:                                           \"|$
+ 19put =\"\#                                                   \"|$
+ 20put =\"\# Licence:                                          \"|$
+ 21put =\"\#--------------------------------------------------#\"|$
+ 22put =\"\"|$
+ 23put =\"\set -eu\"|$
+ 24put =\"\"|$
+ 25put =\"\### Includes ###\"|$
+ 26put =\"\"|$
+ 27put =\"\### Constants ###\"|$
+ 28put =\"\"|$
+ 29put =\"\### Fonctions ###\"|$
+ 30put =\"\"|$
+ 31put =\"\### Global variables ###\"|$
+ 32put =\"\"|$
+ 33put =\"\### Main ###\"|$
+ 34put =\"\"|$
 endfunction
 
 "Appel de la fonction
 autocmd BufNewFile *.sh,*.bash call Bash()
 "Ajout du nom du script
-autocmd BufNewFile *.sh,*.bash exe "1," . 14 . "g/Nom:/s//Nom: " .expand("%")
+autocmd BufNewFile *.sh,*.bash exe "1," . 18 . "g/Script_Name:/s//Script_Name: " .expand("%")
 "Ajout de la date de création
-autocmd bufnewfile *.sh,*.bash exe "1," . 14 . "g/Date:/s//Date: " .strftime("%c")
-autocmd bufnewfile *.sh,*.bash exe "1," . 14 . "g#Usage:#s##Usage: ./" .expand("%")
+autocmd bufnewfile *.sh,*.bash exe "1," . 18 . "g/Date:/s//Date: " .strftime("%c")
+"Ajout de la version de Bash
+autocmd bufnewfile *.sh,*.bash exe "1," . 18 . "g/Bash_Version:/s//Bash_Version: " .system('echo $BASH_VERSION')
+autocmd bufnewfile *.sh,*.bash exe "1," . 18 . "g#Usage:#s##Usage: ./" .expand("%")
 "Écriture des données en buffer sur le fichier
 autocmd Bufwritepre,filewritepre *.sh,*.bash exe "normal ma"
 "Ajout du droit d’exécution
@@ -89,6 +101,9 @@ autocmd BufWritePost *.sh,*.bash silent execute "! sudo chmod u+x %"
 
 "Raccourci faisant appel à la fonction Bash
 nnoremap <F2> :call Bash()<CR>
+
+"Raccourci permettant de récupérer le résultat de l'exécution d'une commande directement sur vim  
+nnoremap <F6> !!$SHELL<Enter>
 
 " Fichiers Markdown
 " =============================
