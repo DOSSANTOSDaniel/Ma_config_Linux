@@ -65,7 +65,7 @@ then
    cp --backup=numbered $(pwd)/{.bashrc,.vimrc} /root/
    cp --backup=numbered $(pwd)/{.bashrc,.vimrc} /home/${user}/
 else
-  echo "Impossible d'installer VIM !"
+  echo "Impossible d’installer VIM !"
   exit 1
 fi 
 

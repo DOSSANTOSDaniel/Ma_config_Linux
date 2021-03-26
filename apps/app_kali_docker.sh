@@ -71,7 +71,7 @@ cd /root/Documents/TOR/
 lynx -dump https://dist.torproject.org/torbrowser | sed "13 q"
 # Téléchargement de tor
 wget https://dist.torproject.org/torbrowser/"$versiontor"/tor-browser-linux64-"$versiontor"_fr.tar.xz   
-# Extratction
+# Extraction
 tar xvf tor-browser-linux64*  
 cd /root/Documents/TOR/tor-browser_fr/
 # Création du raccourci
