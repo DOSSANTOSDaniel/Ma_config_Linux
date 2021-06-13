@@ -1,6 +1,13 @@
 #!/bin/bash
 
-sudo apt-get update
+if [[ $EUID != '0' ]]
+then
+  echo "Executer le script en tant que root !"
+  exit 1
+fi
+
+apt-get update
+apt full-upgrade -y
 
 apt-get install vlc -y
 apt-get install filezilla filezilla-common -y
@@ -29,31 +36,38 @@ apt-get install nextcloud-desktop -y
 apt-get install mdp -y
 
 # Installation de snapd
-apt install snapd
-sudo snap install core
-sudo snap install snap-store
+apt-get install snapd -y
+apt-get install gnome-software-plugin-snap -y
+snap install core
+
+# Installation de flatpak
+apt-get install flatpak -y
+apt-get install gnome-software-plugin-flatpak -y
 
 # Installation de Docker
-sudo apt-get remove docker docker-engine docker.io containerd runc
-sudo apt-get install apt-transport-https -y
-sudo apt-get install ca-certificates -y
-sudo apt-get install curl -y
-sudo apt-get install gnupg -y
-sudo apt-get install lsb-release -y
-curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+apt-get remove docker docker-engine docker.io containerd runc -y
+apt-get install apt-transport-https -y
+apt-get install ca-certificates -y
+apt-get install curl -y
+apt-get install gnupg -y
+apt-get install lsb-release -y
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
 echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
-$(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-sudo apt-get update
-sudo apt-get install docker-ce docker-ce-cli containerd.io -y
+$(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
+apt-get update
+apt-get install docker-ce docker-ce-cli containerd.io -y
 
 # Applications snap
-snap install -y arduino
-snap install -y telegram-desktop
-snap install -y ledger-live-desktop
-snap install -y audible-for-linux
-snap install -y code
-snap install -y glow
-snap install -y czkawka
-snap install -y pycharm-community
-snap install -y simplenote
-snap install -y bitwarden
+snap install arduino
+snap install telegram-desktop
+snap install ledger-live-desktop
+snap install audible-for-linux
+snap install code
+snap install glow
+snap install pycharm-community
+snap install simplenote
+snap install gimp
+
+# Applications flatpak
+flatpak install -y Minder
+

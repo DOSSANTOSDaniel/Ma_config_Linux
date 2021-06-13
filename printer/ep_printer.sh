@@ -1,78 +1,84 @@
 #!/bin/bash
+#-*- coding: UTF8 -*-
 
-#************************************************#
-# Nom:     ep_printer.sh                         #
-# Auteur:  daniel <daniel.massy91@gmail.com>     #
-# Date:    10/03/2021                            #
-# Version: 1.0                                   #
-#                                                #
-# Rôle:    Installe et configure ET-3750.        #
-# Usage:   # ./ep_printer.sh                     #
-#                                                #
-# Documentation :                                #
-#  http://download.ebz.epson.net/man_j/linux/    #  
-#  http://download.ebz.epson.net/dsc/search/01/  #
-#search/searchModuleFromResult                   #
-#                                                #
-#  http://support.epson.net/linux/src/           #
-#  saisir "ET-3750"                              #
-#************************************************#
+#--------------------------------------------------#
+# Script_Name: ep_printer.sh	                               
+#                                                   
+# Author:  'dossantosjdf@gmail.com'                 
+# Date: lun. 07 juin 2021 15:04:20                                             
+# Version: 2.0                                      
+# Bash_Version: 5.0.17(1)-release                                     
+#--------------------------------------------------#
+# Description:
+# Ce script permet l'installation et la configuration
+# de l'imprimante EPSON ET-3750.
+#
+# Liens de téléchargement:
+#
+# Les pilotes pour Linux
+# http://download.ebz.epson.net/dsc/search/01/search/searchModuleFromResult
+#
+# L'application epsonscan2
+# http://support.epson.net/linux/en/epsonscan2.php
+#
+# Les pilotes pour windows
+# https://support.epson.net/setupnavi/?LG2=FR&OSC=WS&MKN=et-3750&PINF=setup#P_SWS
+#
+# Autre tutoriel 
+# https://wnw1005.tistory.com/530
+#
+# Les applications:
+#   1 - epson-printer-utility
+#   2 - epsonscan2
+#                                                   
+# Options:                                          
+#                                                   
+# Usage: ./ep_printer.sh                                            
+#                                                   
+# Limits:                                           
+#                                                   
+# Licence:                                          
+#--------------------------------------------------#
+
+set -eu
+
+### Includes ###
 
 ### Fonctions ###
-deb_install() {
-  apt-get install lsb
-  apt install printer-driver-escpr
 
-  apt-get install qt5-default
-  apt-get install qtbase5-dev 
+### Global variables ###
+readonly printer_ip='192.168.0.114'
 
-  dpkg -i RPM/epson-inkjet-printer-escpr2_1.1.28-1lsb3.2_amd64.deb
-  dpkg -i RPM/epson-printer-utility_1.1.1-1lsb3.2_amd64.deb
+### Main ###
+trap "rm -rf epsonscan2-bundle-6.6.2.4.x86_64.deb" EXIT
 
-  tar xvf RPM/epsonscan2-bundle-6.6.2.3.x86_64.deb.tar.gz 
-
-  ./epsonscan2-bundle-6.6.2.3.x86_64.deb/install.sh 
-}
-
-rpm_install() {
-  dnf install lsb
-  dnf install gutenprint-cups
-
-  dnf install qt5-qtbase 
-  dnf install qt5-qtbase-devel
-
-  rpm -U RPM/epson-inkjet-printer-escpr2-1.1.28-1lsb3.2.x86_64.rpm 
-  rpm -U RPM/epson-printer-utility-1.1.1-1lsb3.2.x86_64.rpm
-
-  tar xvf RPM/epsonscan2-bundle-6.6.2.3.x86_64.rpm.tar.gz
-
-  ./epsonscan2-bundle-6.6.2.3.x86_64.rpm/install.sh
-}
-
-if [[ ${LOGNAME} != "root" ]]
+if [[ $UID != '0' ]]
 then
   echo "Merci d’exécuter le script en tant que root !"
   exit 1
 fi
 
-if [[ $(dpkg -s "apt" 2> /dev/null) || $(dpkg -s "apt-get" 2> /dev/null) ]]
-then
-  deb_install
-elif [[ $(rpm -qi "dnf" 2> /dev/null) ]]
-then
-  rpm_install
-else
-  echo 'INFO : Gestionnaire de paquets non prit en charge'
-  exit 1
-fi
+usermod -aG lpadmin daniel 
 
-lpadmin -p EPSON -v socket://192.168.0.114:9100 -D "Epson ET-3750 Series" -L "Epson" -o printer-error-policy="retry-job" -u allow:all -m lsb/usr/epson-inkjet-printer-escpr2/Epson/Epson-ET-3750_Series-epson-inkjet-printer-escpr2.ppd.gz
+systemctl stop cups-browsed
+systemctl disable cups-browsed
+  
+apt-get update
+apt-get install lsb qt5-default -y
 
-cupsenable EPSON
+dpkg -i DEB/epson-inkjet-printer-escpr2_1.1.33-1lsb3.2_amd64.deb
+dpkg -i DEB/epson-printer-utility_1.1.1-1lsb3.2_amd64.deb
 
-sudo sed -i 's/No/Yes/g' /etc/cups/printers.conf
+tar xvf DEB/epsonscan2-bundle-6.6.2.4.x86_64.deb.tar.gz
 
-service cups restart
+bash epsonscan2-bundle-6.6.2.4.x86_64.deb/install.sh 
+
+lpadmin -p EPSON -E -v socket://${printer_ip}:9100 -D "Epson ET-3750 Series" -L "Epson" -o printer-error-policy="retry-job" -u allow:all -m lsb/usr/epson-inkjet-printer-escpr2/Epson/Epson-ET-3750_Series-epson-inkjet-printer-escpr2.ppd.gz
+
+# imprimante par defaut
+lpadmin -d EPSON
+
+reboot
 
 
 
