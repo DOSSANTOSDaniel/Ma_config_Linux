@@ -188,15 +188,15 @@ maj() {
   echo -e "\n Mise à jour Pacman "  
   echo -e "------------------------\n"
   echo '------ Remove gnupg key ------'
-  rm -rf /etc/pacman.d/gnupg
+  sudo rm -rf /etc/pacman.d/gnupg
   echo '------ Init gnupg key ------'
-  pacman-key --init
+  sudo pacman-key --init
   echo '------ Populate gnupg key ------'
-  pacman-key --populate
+  sudo pacman-key --populate
   echo '------ ArchLinux keys ------'
-  pacman -Sy archlinux-keyring --noconfirm
+  sudo pacman -Sy archlinux-keyring --noconfirm
   echo '------ Upgrade ------'
-  pacman -Suyy --noconfirm
+  sudo pacman -Suyy --noconfirm
   
   echo -e "\n Update SNAP "
   echo -e "------------------------\n"
@@ -210,8 +210,8 @@ maj() {
 
   echo -e "\n Clean PACMAN "
   echo -e "------------------------\n"
-  pacman --sync --clean --noconfirm
-  pacman --remove --nosave --recursive --unneeded $(sudo pacman --query --quiet --deps) --noconfirm
+  sudo pacman --sync --clean --noconfirm
+  sudo pacman --remove --nosave --recursive --unneeded $(sudo pacman --query --quiet --deps) --noconfirm
  
   echo -e "\n Clean SNAP "
   echo -e "------------------------\n"

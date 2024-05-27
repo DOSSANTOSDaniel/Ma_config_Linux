@@ -29,12 +29,11 @@ function cleanup()
   done
 
    mv $(pwd)/.vimrc $(pwd)/config_vimrc
-   mv $(pwd)/.bashrc $(pwd)/config_bashrc
 }
 
 ### Variables ###
 user=$(cat /etc/passwd | grep 1000 | cut -d: -f1)
-dir="/home/${user}/.bashrc /root/.bashrc /home/${user}/.vimrc /root/.vimrc"
+dir="/home/${user}/.vimrc /root/.vimrc"
 
 ### Main ###
 if [[ ${LOGNAME} != "root" ]]
@@ -43,7 +42,7 @@ then
   exit 1
 fi
 
-if [[ -f $(pwd)/.bashrc && -f $(pwd)/.vimrc ]]
+if [[ -f $(pwd)/.vimrc ]]
 then
   echo -e "\n Le script a déjà été exècuté, merci de recloner le repo! \n"
   exit 1
@@ -60,13 +59,11 @@ done
 if ( apt-get install vim -y)
 then 
    mkdir -p {/home/${user}/.vim,/root/.vim}/{backups,undo}
-   mv $(pwd)/config_vimrc $(pwd)/.vimrc && mv $(pwd)/config_bashrc $(pwd)/.bashrc 
+   mv $(pwd)/config_vimrc $(pwd)/.vimrc 
     
-   cp --backup=numbered $(pwd)/{.bashrc,.vimrc} /root/
-   cp --backup=numbered $(pwd)/{.bashrc,.vimrc} /home/${user}/
+   cp --backup=numbered $(pwd)/.vimrc /root/
+   cp --backup=numbered $(pwd)/.vimrc /home/${user}/
 else
   echo "Impossible d’installer VIM !"
   exit 1
-fi 
-
-exec "$BASH"
+fi
